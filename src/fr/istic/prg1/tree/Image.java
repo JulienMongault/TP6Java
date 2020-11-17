@@ -38,12 +38,30 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public boolean isPixelOn(int x, int y) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
-	    return false;
+		if(this.isEmpty()){return false;}
+		Iterator<Node> it = this.iterator();
+		int i = 256;
+		int j = 256;
+		int i2=0;
+		int j2=0;
+		boolean isHorizontal = true;
+		while (it.getValue().state == 2)
+		{
+			i = i / (isHorizontal ? 1 : 2);
+			j = j / (isHorizontal ? 2 : 1);
+			if ((y <= j+j2 && isHorizontal) || (x <= i+i2 && !isHorizontal))
+			{
+				it.goLeft();
+			}
+			else
+			{
+				i2 = (isHorizontal ? i2 : i);
+				j2 = (isHorizontal ? j : j2);
+				it.goRight();
+			}
+			isHorizontal = !isHorizontal;
+		}
+		return (it.getValue().state == 1);
 	}
 
 	/**
@@ -56,13 +74,37 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void affect(AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		Iterator<Node> it = this.iterator();
+				Iterator<Node> it1 = image2.iterator();
+				it1.clear();
+				affectAux(it, it1);
 	}
 
+	public void affectAux(Iterator<Node> it, Iterator<Node> it1)
+	{
+		switch(it1.nodeType())
+		{
+			case DOUBLE: 
+				it.addValue(Node.valueOf(2));
+				it.goLeft();
+				it1.goLeft();
+				affectAux(it,it1);
+				it.goUp();
+				it1.goUp();
+				it.goRight();
+				it1.goRight();
+				affectAux (it, it1);
+				it.goUp();
+				it1.goUp();
+				break;
+			case LEAF:
+				it1.addValue(it1.getValue());
+				break ;
+
+			default: System.out.println("Impossible dâ€™affecter") ;
+		}
+	}
+	
 	/**
 	 * this devient rotation de image2 Ã  180 degrÃ©s.
 	 *
@@ -74,7 +116,7 @@ public class Image extends AbstractImage {
 	public void rotate180(AbstractImage image2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	}
@@ -91,7 +133,7 @@ public class Image extends AbstractImage {
 	public void rotate90(AbstractImage image2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction non demeandée");
+		System.out.println("Fonction non demeandï¿½e");
 		System.out.println("-------------------------------------------------");
 		System.out.println();	    
 	}
@@ -105,7 +147,7 @@ public class Image extends AbstractImage {
 	public void videoInverse() {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	}
@@ -121,7 +163,7 @@ public class Image extends AbstractImage {
 	public void mirrorV(AbstractImage image2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	}
@@ -137,7 +179,7 @@ public class Image extends AbstractImage {
 	public void mirrorH(AbstractImage image2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	}
@@ -154,7 +196,7 @@ public class Image extends AbstractImage {
 	public void zoomIn(AbstractImage image2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	}
@@ -171,7 +213,7 @@ public class Image extends AbstractImage {
 	public void zoomOut(AbstractImage image2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	}
@@ -189,7 +231,7 @@ public class Image extends AbstractImage {
 	public void intersection(AbstractImage image1, AbstractImage image2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	}
@@ -206,7 +248,7 @@ public class Image extends AbstractImage {
 	public void union(AbstractImage image1, AbstractImage image2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	}
@@ -221,7 +263,7 @@ public class Image extends AbstractImage {
 	public boolean testDiagonal() {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	    return false;
@@ -244,7 +286,7 @@ public class Image extends AbstractImage {
 	public boolean sameLeaf(int x1, int y1, int x2, int y2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 		return false;
@@ -261,7 +303,7 @@ public class Image extends AbstractImage {
 	public boolean isIncludedIn(AbstractImage image2) {
 		System.out.println();
 		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
+		System.out.println("Fonction ï¿½ ï¿½crire");
 		System.out.println("-------------------------------------------------");
 		System.out.println();
 	    return false;
