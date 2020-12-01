@@ -40,24 +40,46 @@ public class Image extends AbstractImage {
 	public boolean isPixelOn(int x, int y) {
 		if(this.isEmpty()){return false;}
 		Iterator<Node> it = this.iterator();
-		int i = 256;
-		int j = 256;
-		int i2=0;
-		int j2=0;
+		
+		int i1=0;	//axe x
+		int i2 = 255;
+		int imiddle;
+		
+		int j1=0;	//axe y
+		int j2 = 255;
+		int jmiddle;
+		
 		boolean isHorizontal = true;
+		
 		while (it.getValue().state == 2)
 		{
-			i = i / (isHorizontal ? 1 : 2);
-			j = j / (isHorizontal ? 2 : 1);
-			if ((y <= j+j2 && isHorizontal) || (x <= i+i2 && !isHorizontal))
+			if(isHorizontal)
 			{
-				it.goLeft();
+				jmiddle = (j2 + j1) / 2;
+				if(y < jmiddle)
+				{
+					it.goLeft();
+					j2 = jmiddle;
+				}
+				else
+				{
+					it.goRight();
+					j1 = jmiddle + 1;
+				}
 			}
 			else
 			{
-				i2 = (isHorizontal ? i2 : i);
-				j2 = (isHorizontal ? j : j2);
-				it.goRight();
+				imiddle = (i2 + i1) / 2;
+				if(x < imiddle)
+				{
+					it.goLeft();
+					i2 = imiddle;
+				}
+				else
+				{
+					it.goRight();
+					i1 = imiddle + 1;
+				}
 			}
 			isHorizontal = !isHorizontal;
 		}
@@ -114,11 +136,7 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void rotate180(AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		
 	}
 
 	/**
