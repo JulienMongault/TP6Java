@@ -336,9 +336,69 @@ public class Image extends AbstractImage {
 	    	Iterator<Node> it1 = image1.iterator();
 	    	Iterator<Node> it2 = image2.iterator();
 	    	it.clear(); 
-	    	intersectionAux(it, it1, it2);
+	    	unionAux(it, it1, it2);
 		}
 		
+	}
+	
+	private void unionAux(Iterator<Node> it, Iterator<Node> it1, Iterator<Node> it2)
+	{
+		if (it1.getValue().state == 1 || it2.getValue().state == 1)
+		{
+			it.addValue(Node.valueOf(1));
+		}
+		else if (it1.getValue().state == 0 && it2.getValue().state == 0)
+		{
+			it.addValue(Node.valueOf(0));
+		}
+		else if(it1.getValue().state == 2 && it2.getValue().state == 2)
+		{
+			it.addValue(Node.valueOf(2));
+			it.goLeft();
+			it1.goLeft();
+			it2.goLeft();
+			unionAux(it,it1,it2);
+			it.goUp();
+			it1.goUp();
+			it2.goUp();
+			it.goRight();
+			it1.goRight();
+			it2.goRight();
+			unionAux(it,it1,it2);
+			it.goUp();
+			it1.goUp();
+			it2.goUp();
+		}
+		else if (it1.getValue().state == 2)
+		{
+	        affectAux(it,it1);
+		}
+		else
+		{
+	        affectAux(it,it2);
+		}
+		if(it.nodeType() == NodeType.DOUBLE)
+		{
+			it.goLeft();
+			int a = it.getValue().state;
+			it.goUp();
+			it.goRight();
+			int b = it.getValue().state;
+			if(a != 2 && a == b)
+			{
+				it.remove();
+				it.goUp();
+				it.goLeft();
+				it.remove();
+				it.goUp();
+				it.remove();
+				it.addValue(Node.valueOf(a));
+			}
+			else
+			{
+				it.goUp();
+			}
+		}
 	}
 
 	/**
