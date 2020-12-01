@@ -98,7 +98,7 @@ public class Image extends AbstractImage {
 	public void affect(AbstractImage image2) {
 		Iterator<Node> it = this.iterator();
 				Iterator<Node> it1 = image2.iterator();
-				it1.clear();
+				it.clear();
 				affectAux(it, it1);
 	}
 
@@ -120,7 +120,7 @@ public class Image extends AbstractImage {
 				it1.goUp();
 				break;
 			case LEAF:
-				it1.addValue(it1.getValue());
+				it.addValue(it1.getValue());
 				break ;
 
 			default: System.out.println("Impossible d’affecter") ;
