@@ -135,7 +135,8 @@ public class Image extends AbstractImage {
 	 * @pre !image2.isEmpty()
 	 */
 	@Override
-	public void rotate180(AbstractImage image2) {
+	public void rotate180(AbstractImage image2) 
+	{
 		
 	}
 
@@ -247,12 +248,77 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void intersection(AbstractImage image1, AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		if(!image1.isEmpty() && !image2.isEmpty())
+		{
+			Iterator<Node> it = this.iterator();
+	    	Iterator<Node> it1 = image1.iterator();
+	    	Iterator<Node> it2 = image2.iterator();
+	    	it.clear(); 
+	    	intersectionAux(it, it1, it2);
+		}
+		
 	}
+	
+	private void intersectionAux(Iterator<Node> it, Iterator<Node> it1, Iterator<Node> it2)
+	{
+		if (it1.getValue().state == 0 || it2.getValue().state == 0)
+		{
+			it.addValue(Node.valueOf(0));
+		}
+		else if (it1.getValue().state == 1 && it2.getValue().state == 1)
+		{
+			it.addValue(Node.valueOf(1));
+		}
+		else if(it1.getValue().state == 2 && it2.getValue().state == 2)
+		{
+			it.addValue(Node.valueOf(2));
+			it.goLeft();
+			it1.goLeft();
+			it2.goLeft();
+			intersectionAux(it,it1,it2);
+			it.goUp();
+			it1.goUp();
+			it2.goUp();
+			it.goRight();
+			it1.goRight();
+			it2.goRight();
+			intersectionAux(it,it1,it2);
+			it.goUp();
+			it1.goUp();
+			it2.goUp();
+		}
+		else if (it1.getValue().state == 2)
+		{
+	        affectAux(it,it1);
+		}
+		else
+		{
+	        affectAux(it,it2);
+		}
+		if(it.nodeType() == NodeType.DOUBLE)
+		{
+			it.goLeft();
+			int a = it.getValue().state;
+			it.goUp();
+			it.goRight();
+			int b = it.getValue().state;
+			if(a != 2 && a == b)
+			{
+				it.remove();
+				it.goUp();
+				it.goLeft();
+				it.remove();
+				it.goUp();
+				it.remove();
+				it.addValue(Node.valueOf(a));
+			}
+			else
+			{
+				it.goUp();
+			}
+		}
+	}
+
 
 	/**
 	 * this devient l'union de image1 et image2 au sens des pixels allumés.
@@ -264,11 +330,15 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void union(AbstractImage image1, AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		if(!image1.isEmpty() && !image2.isEmpty())
+		{
+			Iterator<Node> it = this.iterator();
+	    	Iterator<Node> it1 = image1.iterator();
+	    	Iterator<Node> it2 = image2.iterator();
+	    	it.clear(); 
+	    	intersectionAux(it, it1, it2);
+		}
+		
 	}
 
 	/**
