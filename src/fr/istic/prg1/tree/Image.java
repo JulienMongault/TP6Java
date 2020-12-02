@@ -38,13 +38,54 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public boolean isPixelOn(int x, int y) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
-	    return false;
+		if(this.isEmpty()){return false;}
+		Iterator<Node> it = this.iterator();
+		
+		int i1=0;	//axe x
+		int i2 = 255;
+		int imiddle;
+		
+		int j1=0;	//axe y
+		int j2 = 255;
+		int jmiddle;
+		
+		boolean isHorizontal = true;
+		
+		while (it.getValue().state == 2)
+		{
+			if(isHorizontal)
+			{
+				jmiddle = (j2 + j1) / 2;
+				if(y < jmiddle)
+				{
+					it.goLeft();
+					j2 = jmiddle;
+				}
+				else
+				{
+					it.goRight();
+					j1 = jmiddle + 1;
+				}
+			}
+			else
+			{
+				imiddle = (i2 + i1) / 2;
+				if(x < imiddle)
+				{
+					it.goLeft();
+					i2 = imiddle;
+				}
+				else
+				{
+					it.goRight();
+					i1 = imiddle + 1;
+				}
+			}
+			isHorizontal = !isHorizontal;
+		}
+		return (it.getValue().state == 1);
 	}
+
 
 	/**
 	 * this devient identique Ã  image2.
@@ -56,11 +97,35 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void affect(AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		Iterator<Node> it = this.iterator();
+				Iterator<Node> it1 = image2.iterator();
+				it.clear();
+				affectAux(it, it1);
+	}
+
+	public void affectAux(Iterator<Node> it, Iterator<Node> it1)
+	{
+		switch(it1.nodeType())
+		{
+			case DOUBLE: 
+				it.addValue(Node.valueOf(2));
+				it.goLeft();
+				it1.goLeft();
+				affectAux(it,it1);
+				it.goUp();
+				it1.goUp();
+				it.goRight();
+				it1.goRight();
+				affectAux (it, it1);
+				it.goUp();
+				it1.goUp();
+				break;
+			case LEAF:
+				it.addValue(it1.getValue());
+				break ;
+
+			default: System.out.println("Impossible d’affecter") ;
+		}
 	}
 
 	/**
@@ -103,11 +168,34 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void videoInverse() {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction à écrire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		Iterator<Node> it = this.iterator();
+		videoInverseAux(it);
+	}
+	
+	public void videoInverseAux(Iterator<Node> it)
+	{
+		switch (it.nodeType()) {
+			case DOUBLE : 
+				it.goLeft();
+				videoInverseAux(it);
+				it.goUp();
+				it.goRight();
+				videoInverseAux(it);
+				it.goUp();
+				break;
+			
+			case LEAF : 
+				if(it.getValue().state == 0)
+				{
+					it.setValue(Node.valueOf(1));
+				}else 
+				{
+					it.setValue(Node.valueOf(0));
+				}
+				break;
+				
+				default: System.out.print("Impossible d'inverser");
+		}
 	}
 
 	/**
