@@ -349,7 +349,21 @@ public class Image extends AbstractImage {
 	 * @pre !image2.isEmpty()
 	 */
 	@Override
-	public void zoomIn(AbstractImage image2) {
+	public void zoomIn(AbstractImage image2) 
+	{
+		Iterator<Node> it = this.iterator();
+		Iterator<Node> it1 = image2.iterator();
+		it.clear();
+		if(it1.nodeType() == NodeType.DOUBLE)
+		{
+			it1.goLeft();
+			if(it1.nodeType() == NodeType.DOUBLE)
+			{
+				it1.goLeft();
+				
+			}
+		}
+		affectAux(it, it1);
 		
 	}
 
@@ -365,19 +379,85 @@ public class Image extends AbstractImage {
 	public void zoomOut(AbstractImage image2) {
 		Iterator<Node> it = this.iterator();
 		Iterator<Node> it1 = image2.iterator();
-		it.clear();
-		it.addValue(Node.valueOf(2));
-		it.goRight();
-		it.addValue(Node.valueOf(0));
+		if(it1.nodeType() == NodeType.DOUBLE)
+		{
+			it.clear();
+			it.addValue(Node.valueOf(2));
+			it.goRight();
+			it.addValue(Node.valueOf(0));
+			it.goUp();
+			it.goLeft();
+			it.addValue(Node.valueOf(2));
+			it.goRight();
+			it.addValue(Node.valueOf(0));
+			it.goUp();
+			it.goLeft();
+		}
+		zoomOutAux(it, it1, 1);
 		it.goUp();
-		it.goLeft();
-		it.addValue(Node.valueOf(2));
-		it.goRight();
-		it.addValue(Node.valueOf(0));
+		checkChild(it);
 		it.goUp();
-		it.goLeft();
-		affectAux(it, it1);
-		
+		checkChild(it);
+	}
+	
+	private void zoomOutAux(Iterator<Node> it, Iterator<Node> it1, int profondeur)
+	{
+		if(profondeur < 15)
+		{
+			switch(it1.nodeType())
+			{
+				case DOUBLE: 
+					it.addValue(Node.valueOf(2));
+					it.goLeft();
+					it1.goLeft();
+					zoomOutAux(it,it1,profondeur+1);
+					it.goUp();
+					it1.goUp();
+					it.goRight();
+					it1.goRight();
+					zoomOutAux(it, it1,profondeur+1);
+					it.goUp();
+					it1.goUp();
+					break;
+				case LEAF:
+					it.addValue(it1.getValue());
+					break ;
+	
+				default: System.out.println("Impossible d’affecter") ;
+			}
+		}
+		else
+		{
+			it.addValue(Node.valueOf( branchColor(it1)));
+		}
+		checkChild(it);
+	}
+	
+	private int branchColor(Iterator<Node> it)
+	{
+		switch(it.nodeType())
+		{
+			case DOUBLE: 
+                it.goLeft();
+                int value1 = it.getValue().state;
+                it.goUp();
+                it.goRight();
+                int value2 = it.getValue().state;
+                it.goUp();
+                if ((value1 == 0 || value2 == 0 ) && !(value1 == 1 || value2 ==1))
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+				}
+			case LEAF:
+				return it.getValue().state;
+
+			default: System.out.println("Impossible d’affecter") ;
+		}
+		return 0;
 	}
 	
 	/**
@@ -438,6 +518,12 @@ public class Image extends AbstractImage {
 		{
 	        affectAux(it,it2);
 		}
+		checkChild(it);
+	}
+	
+	
+	private void checkChild(Iterator<Node> it)
+	{
 		if(it.nodeType() == NodeType.DOUBLE)
 		{
 			it.goLeft();
@@ -552,12 +638,56 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public boolean testDiagonal() {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
-	    return false;
+		Iterator<Node> it = this.iterator();
+		return testDiagonalAux(it);
+	}
+	
+	private boolean testDiagonalAux(Iterator<Node> it)
+	{
+		boolean ret = true;
+		if(it.nodeType() == NodeType.DOUBLE)
+		{
+			it.goLeft();
+			boolean test;
+			if(it.nodeType() == NodeType.DOUBLE)
+			{
+				it.goLeft();
+				test = testDiagonalAux(it);
+				it.goUp();
+			}
+			else
+			{
+				test = testDiagonalAux(it);
+			}
+			if(!test)
+			{
+				return false;
+			}
+			it.goRight();
+			if(it.nodeType() == NodeType.DOUBLE)
+			{
+				it.goRight();
+				test = testDiagonalAux(it);
+				it.goUp();
+			}
+			else
+			{
+				test = testDiagonalAux(it);
+			}
+			return test;
+		}
+		else if(it.getValue().state==1)
+		{
+			it.goUp();
+			return true;
+		}
+		else
+		{
+			it.remove();
+			it.addValue(Node.valueOf(1));
+			it.goUp();
+			return false;
+		}
 	}
 
 	/**
