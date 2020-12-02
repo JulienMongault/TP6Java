@@ -56,7 +56,7 @@ public class Image extends AbstractImage {
 			if(isHorizontal)
 			{
 				jmiddle = (j2 + j1) / 2;
-				if(y < jmiddle)
+				if(y <= jmiddle)
 				{
 					it.goLeft();
 					j2 = jmiddle;
@@ -66,11 +66,12 @@ public class Image extends AbstractImage {
 					it.goRight();
 					j1 = jmiddle + 1;
 				}
+				
 			}
 			else
 			{
 				imiddle = (i2 + i1) / 2;
-				if(x < imiddle)
+				if(x <= imiddle)
 				{
 					it.goLeft();
 					i2 = imiddle;
@@ -705,12 +706,60 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public boolean sameLeaf(int x1, int y1, int x2, int y2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
-		return false;
+		if(this.isEmpty()){return false;}
+		Iterator<Node> it = this.iterator();
+		
+		int i1=0;	//axe x
+		int i2 = 255;
+		int imiddle;
+		
+		int j1=0;	//axe y
+		int j2 = 255;
+		int jmiddle;
+		
+		boolean isHorizontal = true;
+		
+		while (it.getValue().state == 2)
+		{
+			if(isHorizontal)
+			{
+				jmiddle = (j2 + j1) / 2;
+				if(y1 <= jmiddle && y2 <= jmiddle)
+				{
+					it.goLeft();
+					j2 = jmiddle;
+				}
+				else if (y1 > jmiddle && y2 > jmiddle)
+				{
+					it.goRight();
+					j1 = jmiddle + 1;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				imiddle = (i2 + i1) / 2;
+				if(x1 <= imiddle && x2 <= imiddle)
+				{
+					it.goLeft();
+					i2 = imiddle;
+				}
+				else if(x1 > imiddle && x2 > imiddle)
+				{
+					it.goRight();
+					i1 = imiddle + 1;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			isHorizontal = !isHorizontal;
+		}
+		return true;
 	}
 
 	/**
