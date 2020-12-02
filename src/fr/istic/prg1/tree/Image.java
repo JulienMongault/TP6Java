@@ -137,9 +137,37 @@ public class Image extends AbstractImage {
 	@Override
 	public void rotate180(AbstractImage image2) 
 	{
-		
+		Iterator<Node> it = this.iterator();
+		Iterator<Node> it1 = image2.iterator();
+		it.clear();
+		rotate180Aux(it, it1);
 	}
 
+	private void rotate180Aux(Iterator<Node> it, Iterator<Node> it1) 
+	{
+		switch(it1.nodeType())
+		{
+			case DOUBLE: 
+				it.addValue(Node.valueOf(2));
+				it.goRight();
+				it1.goLeft();
+				rotate180Aux(it,it1);
+				it.goUp();
+				it1.goUp();
+				it.goLeft();
+				it1.goRight();
+				rotate180Aux(it, it1);
+				it.goUp();
+				it1.goUp();
+				break;
+			case LEAF:
+				it.addValue(it1.getValue());
+				break ;
+
+			default: System.out.println("Impossible de rotate") ;
+		}
+		
+	}
 	/**
 	 * this devient rotation de image2 à 90 degrés dans le sens des aiguilles
 	 * d'une montre.
@@ -164,13 +192,41 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void videoInverse() {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		Iterator<Node> it = this.iterator();
+		videoInverseAux(it);
 	}
+	
 
+	private void videoInverseAux(Iterator<Node> it) 
+	{
+		switch(it.nodeType())
+		{
+			case DOUBLE: 
+				it.goLeft();
+				videoInverseAux(it);
+				it.goUp();
+				it.goRight();
+				videoInverseAux(it);
+				it.goUp();
+				break;
+			case LEAF:
+				if(it.getValue().state == 1)
+				{
+					it.remove();
+					it.addValue(Node.valueOf(0));
+				}
+				else
+				{
+					it.remove();
+					it.addValue(Node.valueOf(1));
+				}
+				break ;
+
+			default: System.out.println("Impossible d'inverser") ;
+		}
+		
+	}
+//it.switchValue((it.getValue().state == 1 ? 0 : 1 ));
 	/**
 	 * this devient image miroir verticale de image2.
 	 *
@@ -180,13 +236,54 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void mirrorV(AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		Iterator<Node> it = this.iterator();
+		Iterator<Node> it1 = image2.iterator();
+		it.clear();
+		mirrorVAux(it, it1, false);
 	}
 
+	private void mirrorVAux(Iterator<Node> it, Iterator<Node> it1, boolean isHorizontal) 
+	{
+		switch(it1.nodeType())
+		{
+			case DOUBLE:
+				if(isHorizontal)
+				{
+					it.addValue(Node.valueOf(2));
+					it.goLeft();
+					it1.goLeft();
+					mirrorVAux(it,it1,!isHorizontal);
+					it.goUp();
+					it1.goUp();
+					it.goRight();
+					it1.goRight();
+				}
+				else
+				{
+					
+					it.addValue(Node.valueOf(2));
+					it.goRight();
+					it1.goLeft();
+					mirrorVAux(it,it1,!isHorizontal);
+					it.goUp();
+					it1.goUp();
+					it.goLeft();
+					it1.goRight();
+				}
+				
+				mirrorVAux (it, it1, !isHorizontal);
+				it.goUp();
+				it1.goUp();
+				break;
+			case LEAF:
+				it.addValue(it1.getValue());
+				break ;
+
+			default: System.out.println("Impossible de créer une image miroir") ;
+		}
+		
+	}
+	
 	/**
 	 * this devient image miroir horizontale de image2.
 	 *
@@ -196,13 +293,53 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void mirrorH(AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		Iterator<Node> it = this.iterator();
+		Iterator<Node> it1 = image2.iterator();
+		it.clear();
+		mirrorHAux(it, it1, true);
 	}
 
+	private void mirrorHAux(Iterator<Node> it, Iterator<Node> it1, boolean isHorizontal) 
+	{
+		switch(it1.nodeType())
+		{
+			case DOUBLE:
+				if(isHorizontal)
+				{
+					it.addValue(Node.valueOf(2));
+					it.goLeft();
+					it1.goLeft();
+					mirrorHAux(it,it1,!isHorizontal);
+					it.goUp();
+					it1.goUp();
+					it.goRight();
+					it1.goRight();
+				}
+				else
+				{
+					
+					it.addValue(Node.valueOf(2));
+					it.goRight();
+					it1.goLeft();
+					mirrorHAux(it,it1,!isHorizontal);
+					it.goUp();
+					it1.goUp();
+					it.goLeft();
+					it1.goRight();
+				}
+				
+				mirrorHAux (it, it1, !isHorizontal);
+				it.goUp();
+				it1.goUp();
+				break;
+			case LEAF:
+				it.addValue(it1.getValue());
+				break ;
+
+			default: System.out.println("Impossible de créer une image miroir") ;
+		}
+		
+	}
 	/**
 	 * this devient quart supérieur gauche de image2.
 	 *
@@ -213,11 +350,7 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void zoomIn(AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		
 	}
 
 	/**
@@ -230,13 +363,23 @@ public class Image extends AbstractImage {
 	 */
 	@Override
 	public void zoomOut(AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+		Iterator<Node> it = this.iterator();
+		Iterator<Node> it1 = image2.iterator();
+		it.clear();
+		it.addValue(Node.valueOf(2));
+		it.goRight();
+		it.addValue(Node.valueOf(0));
+		it.goUp();
+		it.goLeft();
+		it.addValue(Node.valueOf(2));
+		it.goRight();
+		it.addValue(Node.valueOf(0));
+		it.goUp();
+		it.goLeft();
+		affectAux(it, it1);
+		
 	}
-
+	
 	/**
 	 * this devient l'intersection de image1 et image2 au sens des pixels
 	 * allumés.
@@ -448,13 +591,47 @@ public class Image extends AbstractImage {
 	 *         false sinon
 	 */
 	@Override
-	public boolean isIncludedIn(AbstractImage image2) {
-		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("Fonction � �crire");
-		System.out.println("-------------------------------------------------");
-		System.out.println();
+	public boolean isIncludedIn(AbstractImage image2) 
+	{
+		if(!image2.isEmpty() && !image2.isEmpty())
+		{
+			if(this == image2)
+			{
+				return true;
+			}
+			Iterator<Node> it = this.iterator();
+	    	Iterator<Node> it1 = image2.iterator();
+	    	return isIncludedAux(it, it1);
+		}
+		
+		
 	    return false;
+	}
+	
+	private boolean isIncludedAux(Iterator<Node> it, Iterator<Node> it1)
+	{
+		boolean ret = true;
+		if (it.getValue().state == 1 || it1.getValue().state == 0)
+		{
+			ret = false;
+		}
+		else if(it1.nodeType() == NodeType.DOUBLE && !(it.getValue().state == 0 || it1.getValue().state == 1))
+		{
+			it.goLeft();
+			it1.goLeft();
+			ret = isIncludedAux(it, it1);
+			if(ret)
+			{
+				it.goUp();
+				it1.goUp();
+				it.goRight();
+				it1.goRight();
+				ret = isIncludedAux(it, it1);
+			}
+			it.goUp();
+			it1.goUp();
+		}
+		return ret;
 	}
 
 }
