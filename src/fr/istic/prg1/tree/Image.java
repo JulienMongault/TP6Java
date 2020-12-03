@@ -2,7 +2,7 @@ package fr.istic.prg1.tree;
 
 import java.util.Scanner;
 
-import fr.istic.prg1.tree_util.AbstractImage;
+import fr.istic.prg1.tree.AbstractImage;
 import fr.istic.prg1.tree_util.Iterator;
 import fr.istic.prg1.tree_util.Node;
 import fr.istic.prg1.tree_util.NodeType;
